@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -31,8 +30,7 @@ public class Robot extends TimedRobot {
   private final XboxController xbox = new XboxController(0);
   private final DifferentialDrive differentialDrive = new DifferentialDrive(victor1,victor3); 
   //private final CANSparkMax sparkMax1 = new CANSparkMax(1, MotorType.kBrushless);
-  private final CANSparkMax sparkMax1 = new CANSparkMax(47, MotorType.kBrushless);
-  private final CANSparkMax sparkMax2 = new CANSparkMax(3, MotorType.kBrushless);
+
   private final CANSparkMax sparkMax3 = new CANSparkMax(53, MotorType.kBrushless);
   //The weird device ids was to fix a strange problem where all the ids would reset on boot, and would get confused     
   //Spark 1: Base / First arm motor, Spark 2: 2nd Arm Motor / Middle Spark 3: Hand 
@@ -50,9 +48,6 @@ public class Robot extends TimedRobot {
     victor3.addFollower(victor4);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-        sparkMax1.setIdleMode(IdleMode.kBrake);
-        sparkMax2.setIdleMode(IdleMode.kBrake);
-        sparkMax3.setIdleMode(IdleMode.kBrake);
     victor3.setInverted(true);
     differentialDrive.setSafetyEnabled(false);
     m_robotContainer = new RobotContainer();
@@ -115,38 +110,29 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() 
   {
-    if(xbox.getLeftBumper())
-    {
-      sparkMax3.set(-0.1);
-    }
-    if(xbox.getRightBumper())
-    {
-      sparkMax3.set(0.1);
-    }
-    motorSet();
-    if (xbox.getRawButton(1) || xbox.getRawButton(4))
-    {
-      suckDrive();  
-    }
-    else 
-    {
-      differentialDrive.arcadeDrive(forwardVelocity, turnVelocity);
-    }
-      
-        sparkMax2.set(xbox.getLeftY()*.1);
-        //sparkMax3.set(xbox.getRightX()*.1);
-        sparkMax1.set(xbox.getRightY()*.1);
-        
-      
-      if(Math.abs(xbox.getLeftY()) < .2)
+    
+    if(xbox.getRightTriggerAxis() > .5)
       {
-        sparkMax2.stopMotor();
+        differentialDrive.arcadeDrive(xbox.getLeftY() * .5, xbox.getRightX() * .5);
       }
+      
+      if(xbox.getRightTriggerAxis() < .5)
+      {
+      motorSet();
+      if (xbox.getRawButton(1) || xbox.getRawButton(4))
+      {
+        suckDrive();  
+      }
+      else 
+      {
+        differentialDrive.arcadeDrive(forwardVelocity, turnVelocity);
+      }
+    }
+    
+    
+      
+    
 
-      if(Math.abs(xbox.getRightY()) < .2)
-      {
-        sparkMax1.stopMotor();
-      }
         /* 
         if(xbox.getRightTriggerAxis() < .5)
     {

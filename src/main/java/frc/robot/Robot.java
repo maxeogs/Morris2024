@@ -7,6 +7,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -30,14 +31,16 @@ public class Robot extends TimedRobot {
   private final XboxController xbox = new XboxController(0);
   private final DifferentialDrive differentialDrive = new DifferentialDrive(victor1,victor3); 
   //private final CANSparkMax sparkMax1 = new CANSparkMax(1, MotorType.kBrushless);
-
-  private final CANSparkMax sparkMax3 = new CANSparkMax(53, MotorType.kBrushless);
+  private final CANSparkMax sparkBase = new CANSparkMax(26, MotorType.kBrushless);
+  private final CANSparkMax sparkForearm = new CANSparkMax(17, MotorType.kBrushless);
+  //  private final CANSparkMax sparkMax3 = new CANSparkMax(53, MotorType.kBrushless);
   //The weird device ids was to fix a strange problem where all the ids would reset on boot, and would get confused     
   //Spark 1: Base / First arm motor, Spark 2: 2nd Arm Motor / Middle Spark 3: Hand 
   private RobotContainer m_robotContainer;
   public double forwardVelocity = 0; 
   public double turnVelocity = 0;
   public double sideVelocity = 0;
+  public Encoder canEncoder = new Encoder(100, 1);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -46,12 +49,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     victor1.addFollower(victor2);
     victor3.addFollower(victor4);
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     victor3.setInverted(true);
     differentialDrive.setSafetyEnabled(false);
     m_robotContainer = new RobotContainer();
-    SmartDashboard.setDefaultNumber("speed", 0);
+    SmartDashboard.setDefaultNumber("speed", 0.5);
 
   }
 
@@ -114,6 +118,11 @@ public class Robot extends TimedRobot {
     if(xbox.getRightTriggerAxis() > .5)
       {
         differentialDrive.arcadeDrive(xbox.getLeftY() * .5, xbox.getRightX() * .5);
+      }
+    if(xbox.getLeftTriggerAxis() > .5)
+      {
+        sparkBase.set(xbox.getLeftY() * 0.5);
+        sparkForearm.set(xbox.getRightY() * 0.5);
       }
       
       if(xbox.getRightTriggerAxis() < .5)

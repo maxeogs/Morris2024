@@ -6,7 +6,7 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <h1>How to use Morris:</h1>
-<h4>Guide made by Maxeo Garcia-Singh, Programming done by Elijah Elkins & Maxeo Garcia-Singh</h4>
+<h4>Guide made by <code>Maxeo Garcia-Singh</code>, Programming done by <code>Elijah Elkins</code> & <code>Maxeo Garcia-Singh</code></h4>
 <p><b>Table of contents:</b></p>
 <a href="#NOTICES">Notices</a>
 <a href="#DDR">DDR Pad Controls</a>
@@ -15,9 +15,7 @@
 <h2 id="NOTICES">Notices:</h2>
 <p>Arm is <b>EXTREMELY</b> hard to control! Very quick! Do <b>not</b> let children use it.</p> 
 <p>Arcade drive <b>WILL</b> override DDR pad (For safety reasons)</p> 
-<p>The arm <b>IS</b> disabled, to enable it paste <a href="https://github.com/maxeogs/Morris2024/blob/DDR-Pad/src/main/java/frc/robot/Robot.java">this</a> over robot.java</p>
-<p>Located in <code>C:\Users\beyerrobotics\Documents\Morris2024\Morris2024\src\main\java\frc\robot\robot.java</code></p>
-<p>If you choose to add the arm code, please refer to the bottom of the page for xbox controls with it. Doing this will disable any safety override feature, so it's not encouraged.</p><br>
+<p>The files are located in <code>C:\Users\beyerrobotics\Documents\Morris2024\Morris2024\src\main\java\frc\robot\robot.java</code></p>
 <h3><b><a href="vscode://file/C:\Users\beyerrobotics\Documents\Morris2024\Morris2024">Click me to open project in VS-Code</a></b></h3>
 <p></p>
 <div >
@@ -37,16 +35,19 @@
     <b>Standard arcade drive</b> <code>(Left Y [Forwards/Backwards] Right X [Left/Right])</code><br>
     <b>Using an XBOX controller with the DDR bad will result in the code ignoring the DDR inputs and only listening to the Xbox Controller.</b>
     <p>This is a safety feature</p>
+    <b>Hold left trigger to control the arm</b>
+    <p><b>Left Y</b>: Raises and lowers the arm. <code>Hold this down to initally lift the arm from rest position.</code></p>
+    <p><b>Right Y</b>: Raises and lowers the forearm.</p>
+    <p><b>Left Toggle Button</b>: Closes the hand</p>
+    <p><b>Right Toggle Button</b>: Opens the hand</p>
 </p>
 
 <h2 id="XBOX-ARM">XBOX DDR Controls:</h2>
-<h3>Use for with arm; the arm code doesn't have arcade mode. (See top for instructions on how to add the arm code)</h3>
-<h3>The code for this is not enabled be default! See above for normal controls!</h3>
+<h3>Since the DDR pad is recognized as a XBOX Controller, here are the coresponding controls!</h3>
+<h4>These will be override with the arcade mode toggle!</h4>
 <b>X Button</b>: Forwards <br>
     <b>B Button</b>: Backwards<br>
     <b>Y Button</b>: Swerve Left<br>
     <b>A Button</b>: Swerve Right<br>
     <b>Back</b>: Turns it left normally<br>
     <b>Start</b>: Turns it right normally<br>
-    <b>Left Y</b>: Lifts the middle of the arm.<br>
-    <b>Right Y</b>: Lifts the base of the arm<br>

@@ -49,6 +49,8 @@ public class Robot extends TimedRobot {
   public double sideVelocity = 0;
   boolean moving = false;
   boolean arm = false;
+  double hands = 0;
+  boolean init = false;
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -117,6 +119,7 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     //sparkMax2.set(.1);
 
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -126,7 +129,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() 
   {
-   
     SmartDashboard.putNumber("Base Position", encoderBase.getPosition());
     SmartDashboard.putNumber("Forearm Position", encoderForearm.getPosition());    
     if(xbox.getRightTriggerAxis() > .5)
@@ -141,11 +143,12 @@ public class Robot extends TimedRobot {
       }
     if(xbox.getLeftTriggerAxis() < .5)
       {
-        if(arm == true)
+        if(arm)
         {
-        sparkBase.set(0);
-        sparkForearm.set(0);
-        arm = false;
+          sparkBase.set(0);
+          sparkForearm.set(0);
+          arm = false;
+
         }
       }
     if(xbox.getLeftBumper())

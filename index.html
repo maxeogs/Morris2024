@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <head>
     <link rel="stylesheet" href="https://pbsi.xyz/style.css" />
-    <link rel="stylesheet" href="C:\Users\beyerrobotics\Documents\Morris2024\Morris2024\style.css" />
     <link rel="stylesheet" href="style.css" />
+    <!--First url grabs the online css-->
     <title>Usage of Morris w/ DDR Pad </title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
@@ -12,10 +12,12 @@
 <a href="#NOTICES">Notices</a>
 <a href="#DDR">DDR Pad Controls</a>
 <a href="#XBOX">Xbox Controls</a>
-<a href="#XBOX-ARM">Xbox Controls w/ Arm</a>
+<a href="#XBOX-ARM">Xbox Button Controls</a>
+<a href="#SMART-DASHBOARD">Smart Dashboard</a>
 <h2 id="NOTICES">Notices:</h2>
-<p>Arm is <b>EXTREMELY</b> hard to control! Very quick! Do <b>not</b> let children use it.</p> 
-<p>Arcade drive <b>WILL</b> override DDR pad (For safety reasons)</p> 
+<p>Arm is hard to control! Exercise caution when around people.</p> 
+<p>Arcade drive <b>WILL</b> override DDR pad (For safety reasons) <a href="#XBOX-ARM">[See Arcade Controls]</p></a> 
+<p><i>The computer used is Team Computer 13</i></p>
 <p>The files are located in <code>C:\Users\beyerrobotics\Documents\Morris2024\Morris2024\src\main\java\frc\robot\robot.java</code></p>
 <h3><b><a href="vscode://file/C:\Users\beyerrobotics\Documents\Morris2024\Morris2024">Click me to open project in VS-Code</a></b></h3>
 <p></p>
@@ -46,16 +48,22 @@
 <h2 id="XBOX-ARM">XBOX DDR Controls:</h2>
 <h3>Since the DDR pad is recognized as a XBOX Controller, here are the coresponding controls!</h3>
 <h4>These will be override with the arcade mode toggle!</h4>
+<h4>These do NOT override DDR pad.</h4>
 <b>X Button</b>: Forwards <br>
     <b>B Button</b>: Backwards<br>
     <b>Y Button</b>: Swerve Left<br>
     <b>A Button</b>: Swerve Right<br>
     <b>Back</b>: Turns it left normally<br>
     <b>Start</b>: Turns it right normally<br>
-<h2>Smart Dashboard:</h2>
+<h2 id="SMART-DASHBOARD">Smart Dashboard:</h2>
 <p>This robot utilizes the Smart Dashboard. To access smart dashboard go to the settings icon in the FRC Driver station, and change Dashboard Type to <code>SmartDashboard</code> </p>
 <p><b>Speed:</b> Set's the speed of the robot when using the DDR pad. This value is out of 1, so 50% is <code>0.50</code></p>
 <p>- For safety reasons, I reccomend keeping this value at or below 40-50% when using at outreach.</p>
 <p>The other 2 values are data from the motor encoders, they're uneditable and can usually be disregarded.</p>
+<h2 id="TROUBLESHOOTING">Troubleshooting & Tips:</h2>
+<p>It is highly reccomended that you don't run the motor against a solid object, if the arm gets stick <b>slowly</b> manually raise it back to it's resting position.</p>
+<p>If a motor stops moving, check the cables attached to it and the motor controller, if any of the red, white, or black cables are disconnected, turn off the robot and reattach them.</p>
+<p>If a motor controller of a non working motor is blinking a strange color, use the rev hardware client to diagnose it.</p>
+<p>To do that, plug the usb-c cable into a motor controller and use the  icon next to the motor controllers to identify the motor controller, and look under sticky faults for the issue.</p>
 </div>
 </html>

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.motorcontrol.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.drive.MechanumDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -34,7 +35,12 @@ public class Robot extends TimedRobot {
   private final Victor victor4 = new Victor(4);
   private final XboxController xbox = new XboxController(0);
   private final XboxController ddr = new XboxController(1);
-  private final DifferentialDrive differentialDrive = new DifferentialDrive(victor1,victor3); 
+
+  // add possible victor inversions here
+
+  // ^^^^^^^^
+
+  private final MechanumDrive mechDrive = new MechanumDrive(victor1, victor2, victor3, victor4); 
   //private final CANSparkMax sparkMax1 = new CANSparkMax(1, MotorType.kBrushless);
   private final CANSparkMax sparkBase = new CANSparkMax(26, MotorType.kBrushless);
   private final CANSparkMax sparkForearm = new CANSparkMax(17, MotorType.kBrushless);
@@ -48,6 +54,10 @@ public class Robot extends TimedRobot {
   public double forwardVelocity = 0; 
   public double turnVelocity = 0;
   public double sideVelocity = 0;
+  public int forwardCont = 0;
+  public int sideCont = 0;
+  public int turnCont = 0;
+  public float maxSpeed = 0;
   boolean moving = false;
   boolean arm = false;
   
@@ -57,19 +67,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    victor1.addFollower(victor2);
-    victor3.addFollower(victor4);
     sparkBase.setIdleMode(IdleMode.kBrake);
     sparkForearm.setIdleMode(IdleMode.kBrake);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    victor3.setInverted(true);
-    differentialDrive.setSafetyEnabled(false);
     m_robotContainer = new RobotContainer();
     SmartDashboard.setDefaultNumber("speed", 0.5);
     SmartDashboard.setDefaultNumber("Forearm Position", 0);
     SmartDashboard.setDefaultNumber("Base Position", 0);    
-
   }
 
   /**
@@ -86,6 +91,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    maxSpeed = SmartDashboard.getNumber("speed", 0);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -132,7 +138,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Forearm Position", encoderForearm.getPosition());    
     if(xbox.getRightTriggerAxis() > .5)
       {
-        differentialDrive.arcadeDrive(-xbox.getLeftY() * .5, -xbox.getRightX() * .5);
+        mechDrive.driveCartesian(xbox.getLeftX * maxSpeed, xbox.getLeftY * maxSpeed, xbox.getRightY * maxSpeed);
       }
     if(xbox.getLeftTriggerAxis() > .5)
       {
@@ -167,106 +173,18 @@ public class Robot extends TimedRobot {
       moving = false;
 
     }
-      if(xbox.getRightTriggerAxis() < .5)
-      {
-      if (ddr.getRawButton(1) || ddr.getRawButton(4))
-      {
-        suckDrive();
-        motorSet();  
-      }
-      else 
-      {
-        differentialDrive.arcadeDrive(forwardVelocity, turnVelocity);
-      }
-    }
-    
-    
-      
-    
-
-        /* 
-        if(xbox.getRightTriggerAxis() < .5)
+    if(xbox.getRightTriggerAxis() < .5)
     {
-      if(xbox.getLeftX() < .5)
-      {
-        if(xbox.getLeftTriggerAxis() > .5)
-        {
-          differentialDrive.arcadeDrive(-xbox.getLeftY(), -xbox.getRightX());
-        } 
-        else
-        {
-          differentialDrive.arcadeDrive(-xbox.getLeftY() * .5, -xbox.getRightX() * .5);
-        }
-      }
-      else 
-      {
-        victor1.set(xbox.getLeftX());
-        victor2.set(xbox.getLeftX());
-        victor3.set(-xbox.getLeftX());
-        victor4.set(-xbox.getLeftX());
-
-      }
-      
+      mechDrive.driveCartesian(forwardCont * maxSpeed, sideCont * maxSpeed, turnCont * maxSpeed);  
     }
-    else
-    {
-      differentialDrive.stopMotor();
-    }*/
-    
   }
 
-public void motorSet()
-{
-  if(ddr.getRawButton(3)) 
+  public void motorSet()
   {
-     forwardVelocity = SmartDashboard.getNumber("speed", 0) * 0.5;
+    forwardCont = ddr.getRawButton(3) - ddr.getRawButton(2);
+    sideCont = ddr.getRawButton(1) - ddr.getRawButton(4);
+    turnCont = ddr.getRawButton(7) - ddr.getRawButton(8);
   }
-  else if(ddr.getRawButton(2))
-  {
-    forwardVelocity = -SmartDashboard.getNumber("speed", 0) * 0.5;
-  }
-  else
-  {
-    forwardVelocity = 0;
-  }
-  //ddr.getRawButton(3);
-  
-  if(ddr.getRawButton(7)) 
-  {
-     turnVelocity = SmartDashboard.getNumber("speed", 0);
-  }
-  else if(ddr.getRawButton(8))
-  {
-    turnVelocity = -SmartDashboard.getNumber("speed", 0);
-  }
-  else
-  {
-    turnVelocity = 0;
-  }
-
-  if(ddr.getRawButton(1))
-  {
-    sideVelocity = SmartDashboard.getNumber("speed", 0) * 0.5;
-  }
-  else if(ddr.getRawButton(4))
-  {
-    sideVelocity = -SmartDashboard.getNumber("speed", 0) * 0.5;
-  }
-  else
-  {
-    sideVelocity = 0;
-  }
-  //ddr.getRawButton(3);
-  
-}
-
-public void suckDrive()
-{
-  victor1.set(-sideVelocity);
-  victor3.set(sideVelocity);
-  victor2.set(sideVelocity);
-  victor4.set(sideVelocity);
-}
  
   @Override
   public void testInit() {

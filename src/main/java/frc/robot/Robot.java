@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
   private final Victor victor2 = new Victor(2);
   private final Victor victor4 = new Victor(4);
   private final XboxController xbox = new XboxController(0);
+  private final XboxController ddr = new XboxController(1);
   private final DifferentialDrive differentialDrive = new DifferentialDrive(victor1,victor3); 
   //private final CANSparkMax sparkMax1 = new CANSparkMax(1, MotorType.kBrushless);
   private final CANSparkMax sparkBase = new CANSparkMax(26, MotorType.kBrushless);
@@ -126,7 +127,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() 
   {
-   
+    motorSet();
     SmartDashboard.putNumber("Base Position", encoderBase.getPosition());
     SmartDashboard.putNumber("Forearm Position", encoderForearm.getPosition());    
     if(xbox.getRightTriggerAxis() > .5)
@@ -168,10 +169,10 @@ public class Robot extends TimedRobot {
     }
       if(xbox.getRightTriggerAxis() < .5)
       {
-      motorSet();
-      if (xbox.getRawButton(1) || xbox.getRawButton(4))
+      if (ddr.getRawButton(1) || ddr.getRawButton(4))
       {
-        suckDrive();  
+        suckDrive();
+        motorSet();  
       }
       else 
       {
@@ -214,35 +215,27 @@ public class Robot extends TimedRobot {
     
   }
 
-public void suckDrive()
-{
-  victor1.set(-sideVelocity);
-  victor3.set(sideVelocity);
-  victor2.set(sideVelocity);
-  victor4.set(sideVelocity);
-}
-
 public void motorSet()
 {
-  if(xbox.getRawButton(3)) 
+  if(ddr.getRawButton(3)) 
   {
-     forwardVelocity = SmartDashboard.getNumber("speed", 0);
+     forwardVelocity = SmartDashboard.getNumber("speed", 0) * 0.5;
   }
-  else if(xbox.getRawButton(2))
+  else if(ddr.getRawButton(2))
   {
-    forwardVelocity = -SmartDashboard.getNumber("speed", 0);
+    forwardVelocity = -SmartDashboard.getNumber("speed", 0) * 0.5;
   }
   else
   {
     forwardVelocity = 0;
   }
-  //xbox.getRawButton(3);
+  //ddr.getRawButton(3);
   
-  if(xbox.getRawButton(7)) 
+  if(ddr.getRawButton(7)) 
   {
      turnVelocity = SmartDashboard.getNumber("speed", 0);
   }
-  else if(xbox.getRawButton(8))
+  else if(ddr.getRawButton(8))
   {
     turnVelocity = -SmartDashboard.getNumber("speed", 0);
   }
@@ -251,20 +244,28 @@ public void motorSet()
     turnVelocity = 0;
   }
 
-  if(xbox.getRawButton(1))
+  if(ddr.getRawButton(1))
   {
-    sideVelocity = 0.4;
+    sideVelocity = SmartDashboard.getNumber("speed", 0) * 0.5;
   }
-  else if(xbox.getRawButton(4))
+  else if(ddr.getRawButton(4))
   {
-    sideVelocity = -0.4;
+    sideVelocity = -SmartDashboard.getNumber("speed", 0) * 0.5;
   }
   else
   {
     sideVelocity = 0;
   }
-  //xbox.getRawButton(3);
+  //ddr.getRawButton(3);
   
+}
+
+public void suckDrive()
+{
+  victor1.set(-sideVelocity);
+  victor3.set(sideVelocity);
+  victor2.set(sideVelocity);
+  victor4.set(sideVelocity);
 }
  
   @Override

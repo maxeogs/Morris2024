@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.motorcontrol.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj.drive.MechanumDrive;
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -37,10 +37,10 @@ public class Robot extends TimedRobot {
   private final XboxController ddr = new XboxController(1);
 
   // add possible victor inversions here
-
+  
   // ^^^^^^^^
 
-  private final MechanumDrive mechDrive = new MechanumDrive(victor1, victor2, victor3, victor4); 
+  private final MecanumDrive mechDrive = new MecanumDrive(victor1, victor2, victor3, victor4); 
   //private final CANSparkMax sparkMax1 = new CANSparkMax(1, MotorType.kBrushless);
   private final CANSparkMax sparkBase = new CANSparkMax(26, MotorType.kBrushless);
   private final CANSparkMax sparkForearm = new CANSparkMax(17, MotorType.kBrushless);
@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
   public int forwardCont = 0;
   public int sideCont = 0;
   public int turnCont = 0;
-  public float maxSpeed = 0;
+  public double maxSpeed = 0;
   boolean moving = false;
   boolean arm = false;
   
@@ -74,7 +74,9 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     SmartDashboard.setDefaultNumber("speed", 0.5);
     SmartDashboard.setDefaultNumber("Forearm Position", 0);
-    SmartDashboard.setDefaultNumber("Base Position", 0);    
+    SmartDashboard.setDefaultNumber("Base Position", 0);
+    victor1.setInverted(true);
+    victor3.setInverted(true);   
   }
 
   /**
@@ -138,7 +140,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Forearm Position", encoderForearm.getPosition());    
     if(xbox.getRightTriggerAxis() > .5)
       {
-        mechDrive.driveCartesian(xbox.getLeftX * maxSpeed, xbox.getLeftY * maxSpeed, xbox.getRightY * maxSpeed);
+        mechDrive.driveCartesian(-xbox.getLeftX() * maxSpeed, xbox.getLeftY() * maxSpeed, 0);
+        if (xbox.getRightX() != 0)
+        {
+          turnBetter(xbox.getRightX());
+        }
       }
     if(xbox.getLeftTriggerAxis() > .5)
       {
@@ -158,14 +164,14 @@ public class Robot extends TimedRobot {
     if(xbox.getLeftBumper())
       {
         moving = true;
-        sparkHands.set(-.1);
+        sparkHands.set(-.5);
       
       }
     if(xbox.getRightBumper())
       {
         
         moving = true;
-        sparkHands.set(.1);
+        sparkHands.set(.5);
       }
     if(!(xbox.getLeftBumper() || xbox.getRightBumper()))
     {
@@ -175,15 +181,30 @@ public class Robot extends TimedRobot {
     }
     if(xbox.getRightTriggerAxis() < .5)
     {
-      mechDrive.driveCartesian(forwardCont * maxSpeed, sideCont * maxSpeed, turnCont * maxSpeed);  
+      mechDrive.driveCartesian(forwardCont * maxSpeed, sideCont * maxSpeed, 0);
+      if (turnCont != 0){
+        turnBetter(turnCont);
+      }
     }
   }
 
   public void motorSet()
   {
-    forwardCont = ddr.getRawButton(3) - ddr.getRawButton(2);
-    sideCont = ddr.getRawButton(1) - ddr.getRawButton(4);
-    turnCont = ddr.getRawButton(7) - ddr.getRawButton(8);
+    forwardCont = boolToInt(ddr.getRawButton(3)) - boolToInt(ddr.getRawButton(2));
+    sideCont = boolToInt(ddr.getRawButton(1)) - boolToInt(ddr.getRawButton(4));
+    turnCont = boolToInt(ddr.getRawButton(7)) - boolToInt(ddr.getRawButton(8));
+  }
+
+  public void turnBetter(double input)
+  {
+    victor1.set(-input * .5);
+    victor2.set(input * .5);
+    victor3.set(-input * .5);
+    victor4.set(input * .5);
+  }
+
+  public int boolToInt(boolean b) {
+    return Boolean.compare(b, false);
   }
  
   @Override

@@ -4,17 +4,18 @@
 
 package frc.robot;
 
+
+import java.sql.Driver;
+
 //import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -77,6 +78,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.setDefaultNumber("Base Position", 0);
     victor1.setInverted(true);
     victor3.setInverted(true);   
+    DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   /**
@@ -129,6 +131,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
   }
 
   /** This function is called periodically during operator control. */
@@ -138,15 +141,23 @@ public class Robot extends TimedRobot {
     motorSet();
     SmartDashboard.putNumber("Base Position", encoderBase.getPosition());
     SmartDashboard.putNumber("Forearm Position", encoderForearm.getPosition());    
-    if(xbox.getRightTriggerAxis() > .5)
+    if(xbox.getRightTriggerAxis() > .5 && !arm)
       {
         mechDrive.driveCartesian(-xbox.getLeftX() * maxSpeed, xbox.getLeftY() * maxSpeed, 0);
         if (xbox.getRightX() != 0)
         {
           turnBetter(xbox.getRightX());
+          
         }
       }
-    if(xbox.getLeftTriggerAxis() > .5)
+    if(xbox.getRightTriggerAxis() > .5 && xbox.getLeftTriggerAxis() > .5)
+    {
+      mechDrive.driveCartesian(0, 0, 0);
+      sparkBase.set(0);
+      sparkForearm.set(0);
+      DriverStation.reportError("Dual Input (L-TriggerAxis & R-TriggerAxis)", false);
+    }
+    if(xbox.getLeftTriggerAxis() > .5 && xbox.getRightTriggerAxis() < .5)
       {
         arm = true;
         sparkBase.set(xbox.getLeftY() * .1);
@@ -179,6 +190,11 @@ public class Robot extends TimedRobot {
       moving = false;
 
     }
+    if(xbox.getRightTriggerAxis() > .5 && ((forwardCont + sideCont + turnCont) > 0) )
+    {
+      DriverStation.reportWarning("Overriding DDR Pad (R-Axis > 0.5)", false);
+      
+    }
     if(xbox.getRightTriggerAxis() < .5)
     {
       mechDrive.driveCartesian(forwardCont * maxSpeed, sideCont * maxSpeed, 0);
@@ -190,9 +206,9 @@ public class Robot extends TimedRobot {
 
   public void motorSet()
   {
-    forwardCont = boolToInt(ddr.getRawButton(3)) - boolToInt(ddr.getRawButton(2));
-    sideCont = boolToInt(ddr.getRawButton(1)) - boolToInt(ddr.getRawButton(4));
-    turnCont = boolToInt(ddr.getRawButton(7)) - boolToInt(ddr.getRawButton(8));
+    forwardCont = boolToInt(ddr.getRawButton(1)) - boolToInt(ddr.getRawButton(4));
+    sideCont = boolToInt(ddr.getRawButton(2)) - boolToInt(ddr.getRawButton(3));
+    turnCont = boolToInt(ddr.getRawButton(8)) - boolToInt(ddr.getRawButton(7));
   }
 
   public void turnBetter(double input)

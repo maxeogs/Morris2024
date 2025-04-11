@@ -11,13 +11,13 @@
 <a href="#NOTICES">Notices</a>
 <a href="#DDR">DDR Pad Controls</a>
 <a href="#XBOX">Xbox Controls</a>
-<a href="#XBOX-ARM">Xbox Controls w/ Arm</a>
+<a href="#ARM">Arm Controls</a>
 <h2 id="NOTICES">Notices:</h2>
-<p>Arm is <b>EXTREMELY</b> hard to control! Very quick! Do <b>not</b> let children use it.</p> 
+<p>Arm may be confusing to control, please refer to the bottom for arm controls.</p> 
 <p>Arcade drive <b>WILL</b> override DDR pad (For safety reasons)</p> 
-<p>The arm <b>IS</b> disabled, to enable it paste <a href="https://github.com/maxeogs/Morris2024/blob/DDR-Pad/src/main/java/frc/robot/Robot.java">this</a> over robot.java</p>
-<p>Located in <code>C:\Users\beyerrobotics\Documents\Morris2024\Morris2024\src\main\java\frc\robot\robot.java</code></p>
-<p>If you choose to add the arm code, please refer to the bottom of the page for xbox controls with it. Doing this will disable any safety override feature, so it's not encouraged.</p><br>
+<p>This code require <code>2</code> controllers to fully function, the operator's controller should be controller ID 0, and the DDR pad should be controller ID 1.</p>
+<img src="ctrl.png"></img>
+<p>Code is located in <code>C:\Users\beyerrobotics\Documents\Morris2024\Morris2024\src\main\java\frc\robot\robot.java</code></p>
 <h3><b><a href="vscode://file/C:\Users\beyerrobotics\Documents\Morris2024\Morris2024">Click me to open project in VS-Code</a></b></h3>
 <p></p>
 <div >
@@ -34,19 +34,16 @@
 <h2 id="XBOX">XBOX Controls:</h2>
 <p>
     <b>Hold right trigger while using Xbox controls!</b><br>
-    <b>Standard arcade drive</b> <code>(Left Y [Forwards/Backwards] Right X [Left/Right])</code><br>
-    <b>Using an XBOX controller with the DDR bad will result in the code ignoring the DDR inputs and only listening to the Xbox Controller.</b>
-    <p>This is a safety feature</p>
+    <b>Modified arcade drive</b> <code>(Left Y [Forwards/Backwards] Left X [Rotate Left/Rotate Right] Right X [Swerve Left / Swerve Right] )</code><br>
+    <b>Using an XBOX controller with the DDR pad will result in the code ignoring the DDR inputs and only listening to the Xbox Controller.</b>
+    <img src="override.png">
 </p>
-
-<h2 id="XBOX-ARM">XBOX DDR Controls:</h2>
-<h3>Use for with arm; the arm code doesn't have arcade mode. (See top for instructions on how to add the arm code)</h3>
-<h3>The code for this is not enabled be default! See above for normal controls!</h3>
-<b>X Button</b>: Forwards <br>
-    <b>B Button</b>: Backwards<br>
-    <b>Y Button</b>: Swerve Left<br>
-    <b>A Button</b>: Swerve Right<br>
-    <b>Back</b>: Turns it left normally<br>
-    <b>Start</b>: Turns it right normally<br>
-    <b>Left Y</b>: Lifts the middle of the arm.<br>
-    <b>Right Y</b>: Lifts the base of the arm<br>
+<h2 id="ARM">Arm Controls:</h2>
+    <p>
+        To control the arm, hold Left Trigger Axis on your controller. <br>Heads up: <code>It will send an error if you hold both triggers at the same time</code>
+        <br><img src="dual.png"></img>
+        <br> Bring forearm towards you (L y-axis up) / away from you (L y-axis down) <b>[From the POV of behind the robot]</b><br>
+        Bring arm up {away from you} (R y-axis up) / arm down (R y-axis down) [From the POV of behind the robot]
+        <br>This may feel as if the robot arm's controls are reversed.
+    </p>
+</div>

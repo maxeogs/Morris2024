@@ -144,7 +144,7 @@ public class Robot extends TimedRobot {
     if(xbox.getRightTriggerAxis() > .5 && !arm)
       {
         mechDrive.driveCartesian(-xbox.getLeftX() * maxSpeed, xbox.getLeftY() * maxSpeed, 0);
-        if (xbox.getRightX() != 0)
+        if (Math.abs(xbox.getRightX()) > 0.07)
         {
           turnBetter(xbox.getRightX());
           
@@ -190,7 +190,7 @@ public class Robot extends TimedRobot {
       moving = false;
 
     }
-    if(xbox.getRightTriggerAxis() > .5 && ((forwardCont + sideCont + turnCont) > 0) )
+    if(xbox.getRightTriggerAxis() > .5 && ((forwardCont + sideCont + turnCont) != 0 ) )
     {
       DriverStation.reportWarning("Overriding DDR Pad (R-Axis > 0.5)", false);
       

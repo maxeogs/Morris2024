@@ -175,14 +175,14 @@ public class Robot extends TimedRobot {
     if(xbox.getLeftBumper())
       {
         moving = true;
-        sparkHands.set(-.5);
+        sparkHands.set(-.25);
       
       }
     if(xbox.getRightBumper())
       {
         
         moving = true;
-        sparkHands.set(.5);
+        sparkHands.set(.25);
       }
     if(!(xbox.getLeftBumper() || xbox.getRightBumper()))
     {

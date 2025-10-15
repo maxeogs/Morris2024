@@ -5,8 +5,6 @@
 package frc.robot;
 
 
-import java.sql.Driver;
-
 //import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
